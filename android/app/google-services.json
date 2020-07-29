@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "771726890179",
+    "firebase_url": "https://taskcv-f24f6.firebaseio.com",
+    "project_id": "taskcv-f24f6",
+    "storage_bucket": "taskcv-f24f6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771726890179:android:1d21d956529ac0d2b3fe76",
+        "android_client_info": {
+          "package_name": "com.example.flutter_personal_taskcv_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771726890179-ftr8orkas9ucndo6rb2mm495dib8qb3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_personal_taskcv_app",
+            "certificate_hash": "8aee05d852a18e132dd80f7fc214a36c65649564"
+          }
+        },
+        {
+          "client_id": "771726890179-3q8pv8ejp45kc7n5bsc67ic9rgajtg7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhVQJCZNdSQQu6cV7pFveD4tbsKs_uWc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771726890179-3q8pv8ejp45kc7n5bsc67ic9rgajtg7j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
