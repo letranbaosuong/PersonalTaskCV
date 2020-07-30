@@ -36,6 +36,9 @@ dependencies:
   line_awesome_flutter: any
   shared_preferences: any
   url_launcher: any
+  firebase_storage: any
+  image_picker: ^0.5.3+1
+  image: any
 
 dev_dependencies:
   flutter_test:
