@@ -298,7 +298,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),

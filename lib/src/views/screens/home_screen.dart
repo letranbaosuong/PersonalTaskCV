@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/services/authentication.dart';
 import 'package:flutter_personal_taskcv_app/src/views/fragments/fragments.dart';
+import 'package:flutter_personal_taskcv_app/src/views/screens/add_profile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -32,6 +34,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FirebaseDatabase _database = FirebaseDatabase.instance;
+
+  @override
+  void initState() {
+    _database
+        .reference()
+        .child('Users')
+        .child(widget.userId)
+        .once()
+        .then((snapshot) {
+      if (snapshot.value == null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddProfile(
+              userId: widget.userId,
+              auth: widget.auth,
+              logoutCallback: widget.logoutCallback,
+            ),
+          ),
+        );
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> drawerOptions = [];

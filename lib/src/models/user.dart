@@ -24,7 +24,7 @@ class User {
       : id = snapshot['Id'],
         name = snapshot['Name'],
         email = snapshot['Email'],
-        birthDay = snapshot['BirthDay'],
+        birthDay = DateTime.fromMillisecondsSinceEpoch(snapshot['BirthDay']),
         address = snapshot['Address'],
         urlImage = snapshot['UrlImage'],
         listProject = snapshot['ListProject'];
@@ -34,7 +34,7 @@ class User {
       'Id': id,
       'Name': name,
       'Email': email,
-      'BirthDay': birthDay,
+      'BirthDay': birthDay.millisecondsSinceEpoch,
       'Address': address,
       'UrlImage': urlImage,
       'ListProject': listProject,
