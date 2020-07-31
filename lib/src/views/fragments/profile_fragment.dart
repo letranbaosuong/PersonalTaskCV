@@ -562,7 +562,22 @@ class _ProfileFragmentState extends State<ProfileFragment> {
         } else {
           return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Đang tải...',
+                      style: TextStyle(
+                        fontSize: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }

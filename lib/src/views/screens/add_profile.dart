@@ -5,9 +5,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 import 'package:flutter_personal_taskcv_app/src/services/services.dart';
+import 'package:flutter_personal_taskcv_app/src/views/screens/screens.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class AddProfile extends StatefulWidget {
   AddProfile({Key key, this.auth, this.userId, this.logoutCallback})
@@ -28,6 +30,8 @@ class _AddProfileState extends State<AddProfile> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   TextEditingController _textAddressEditingController;
+  final RoundedLoadingButtonController _btnAddProfileController =
+      new RoundedLoadingButtonController();
   String _userName;
   String _address;
 
@@ -74,9 +78,21 @@ class _AddProfileState extends State<AddProfile> {
 
       SnackBar snackbar = SnackBar(content: Text('Chào mừng $_userName!'));
       _scaffoldKey.currentState.showSnackBar(snackbar);
-      Timer(Duration(seconds: 2), () {
-        Navigator.pop(context);
+      Timer(Duration(seconds: 1), () {
+        _btnAddProfileController.success();
+        Timer(Duration(seconds: 1), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RootScreen(
+                auth: Auth(),
+              ),
+            ),
+          );
+        });
       });
+    } else {
+      _btnAddProfileController.stop();
     }
   }
 
@@ -220,22 +236,32 @@ class _AddProfileState extends State<AddProfile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    RaisedButton.icon(
-                      icon: Icon(
-                        LineAwesomeIcons.check,
-                        color: Colors.white,
-                      ),
-                      color: Color(0xffE7A336),
-                      onPressed: _submit,
-                      elevation: 4.0,
-                      splashColor: Colors.orangeAccent,
-                      label: Text(
+                    // RaisedButton.icon(
+                    //   icon: Icon(
+                    //     LineAwesomeIcons.check,
+                    //     color: Colors.white,
+                    //   ),
+                    //   color: Color(0xffE7A336),
+                    //   onPressed: _submit,
+                    //   elevation: 4.0,
+                    //   splashColor: Colors.orangeAccent,
+                    //   label: Text(
+                    //     'Đồng ý',
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 16.0,
+                    //     ),
+                    //   ),
+                    // ),
+                    RoundedLoadingButton(
+                      child: Text(
                         'Đồng ý',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
+                        style: TextStyle(color: Colors.white),
                       ),
+                      controller: _btnAddProfileController,
+                      onPressed: _submit,
+                      width: 100,
+                      color: Color(0xffE7A336),
                     ),
                   ],
                 ),

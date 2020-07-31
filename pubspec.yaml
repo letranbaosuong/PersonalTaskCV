@@ -41,6 +41,7 @@ dependencies:
   image: any
   cached_network_image: any
   geolocator: any
+  rounded_loading_button: any
 
 dev_dependencies:
   flutter_test:

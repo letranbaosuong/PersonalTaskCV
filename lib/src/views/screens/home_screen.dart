@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .once()
         .then((snapshot) {
       if (snapshot.value == null) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => AddProfile(
