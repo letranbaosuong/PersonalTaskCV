@@ -40,6 +40,7 @@ dependencies:
   image_picker: ^0.5.3+1
   image: any
   cached_network_image: any
+  geolocator: any
 
 dev_dependencies:
   flutter_test:

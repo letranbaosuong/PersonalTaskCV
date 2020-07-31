@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 import 'package:flutter_personal_taskcv_app/src/services/authentication.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -89,7 +90,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   // TextEditingController _textUserNameEditingController;
-  // TextEditingController _textAddressEditingController;
+  TextEditingController _textAddressEditingController;
   String _userName;
   String _address;
   User _dataUserCurrent;
@@ -99,6 +100,22 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 
   final formatDate = DateFormat('dd-MM-yyyy');
   DateTime _selectedDate = DateTime.now();
+
+  _getUserLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placemark = placemarks[0];
+    String formattedAddress =
+        '${placemark.name}, ${placemark.thoroughfare}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.country}.';
+    await SharedPreferencesHelper.setDiachi(formattedAddress);
+    setState(() {
+      _textAddressEditingController =
+          TextEditingController(text: formattedAddress);
+      _textAddressEditingController.text = formattedAddress;
+    });
+  }
 
   _setAccount(User user) {
     _database
@@ -263,6 +280,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
       if (snapshot.value != null) {
         _dataUserCurrent = User.fromSnapshot(snapshot.value);
         _selectedDate = _dataUserCurrent.birthDay;
+        _textAddressEditingController =
+            TextEditingController(text: _dataUserCurrent.address);
       }
     });
     super.initState();
@@ -281,6 +300,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
           _userName = _dataUserCurrent.name;
           _address = _dataUserCurrent.address;
           // _selectedDate = _dataUserCurrent.birthDay;
+          // _textAddressEditingController = TextEditingController(text: _address);
 
           return Scaffold(
             key: _scaffoldKey,
@@ -313,7 +333,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         width: 180.0,
                                         height: 180.0,
                                         child: (_file == null)
-                                            ? (_dataUserCurrent.urlImage.isEmpty)
+                                            ? (_dataUserCurrent
+                                                    .urlImage.isEmpty)
                                                 ? Image.asset(
                                                     'assets/images/default_avatar.jpg',
                                                     fit: BoxFit.fill,
@@ -401,17 +422,17 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   child: Card(
                                     child: ListTile(
                                       leading: Icon(
-                                        LineAwesomeIcons.address_card,
+                                        LineAwesomeIcons.alternate_map_marked,
                                         color: Colors.orange,
                                       ),
                                       title: TextFormField(
-                                        initialValue: _dataUserCurrent.address,
+                                        // initialValue: _dataUserCurrent.address,
                                         onChanged: (val) async {
                                           await SharedPreferencesHelper
                                               .setDiachi(val);
                                         },
-                                        // controller: _textAddressEditingController
-                                        //   ..text = _address,
+                                        controller:
+                                            _textAddressEditingController,
                                         validator: (val) {
                                           if (val.trim().length < 3 ||
                                               val.isEmpty) {
@@ -425,6 +446,13 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           border: InputBorder.none,
                                           hintText: 'Đại chỉ',
                                         ),
+                                      ),
+                                      trailing: IconButton(
+                                        icon: Icon(
+                                          Icons.my_location,
+                                          color: Colors.orange,
+                                        ),
+                                        onPressed: _getUserLocation,
                                       ),
                                     ),
                                   ),
@@ -541,8 +569,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 
   @override
   void dispose() {
-    // _textAddressEditingController.dispose();
     // _textUserNameEditingController.dispose();
+    _textAddressEditingController.dispose();
     clearImage();
     super.dispose();
   }
