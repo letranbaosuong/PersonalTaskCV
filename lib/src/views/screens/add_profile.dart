@@ -50,12 +50,12 @@ class _AddProfileState extends State<AddProfile> {
         email: userCurrent.email,
         birthDay: _selectedDate,
         address: _address,
-        urlImage: 'null',
+        urlImage: '',
         listProject: [],
       );
       _setAccount(user);
 
-      SnackBar snackbar = SnackBar(content: Text("Chào mừng $_userName!"));
+      SnackBar snackbar = SnackBar(content: Text('Chào mừng $_userName!'));
       _scaffoldKey.currentState.showSnackBar(snackbar);
       Timer(Duration(seconds: 2), () {
         Navigator.pop(context);
@@ -117,7 +117,7 @@ class _AddProfileState extends State<AddProfile> {
                               validator: (val) {
                                 if (val.trim().length < 3 || val.isEmpty) {
                                   return 'Tên quá ngắn';
-                                } else if (val.trim().length > 12) {
+                                } else if (val.trim().length > 256) {
                                   return 'Tên quá dài';
                                 } else {
                                   return null;
