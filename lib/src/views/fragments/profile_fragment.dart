@@ -300,7 +300,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
           _userName = _dataUserCurrent.name;
           _address = _dataUserCurrent.address;
           // _selectedDate = _dataUserCurrent.birthDay;
-          // _textAddressEditingController = TextEditingController(text: _address);
+          if (_textAddressEditingController == null) {
+            _textAddressEditingController =
+                TextEditingController(text: _dataUserCurrent.address);
+          }
 
           return Scaffold(
             key: _scaffoldKey,
@@ -444,7 +447,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         onSaved: (val) => _address = val,
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'Đại chỉ',
+                                          hintText: 'Địa chỉ',
                                         ),
                                       ),
                                       trailing: IconButton(
@@ -570,7 +573,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   @override
   void dispose() {
     // _textUserNameEditingController.dispose();
-    _textAddressEditingController.dispose();
+    if (_textAddressEditingController != null) {
+      _textAddressEditingController.dispose();
+    }
     clearImage();
     super.dispose();
   }

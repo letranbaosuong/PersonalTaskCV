@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 import 'package:flutter_personal_taskcv_app/src/services/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
@@ -26,8 +27,24 @@ class _AddProfileState extends State<AddProfile> {
   DateTime _selectedDate = DateTime.now();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _textAddressEditingController;
   String _userName;
   String _address;
+
+  _getUserLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placemark = placemarks[0];
+    String formattedAddress =
+        '${placemark.name}, ${placemark.thoroughfare}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.country}.';
+    setState(() {
+      _textAddressEditingController =
+          TextEditingController(text: formattedAddress);
+      _textAddressEditingController.text = formattedAddress;
+    });
+  }
 
   _setAccount(User user) {
     _database
@@ -73,6 +90,12 @@ class _AddProfileState extends State<AddProfile> {
       setState(() {
         _selectedDate = picked;
       });
+  }
+
+  @override
+  void initState() {
+    _textAddressEditingController = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -138,10 +161,11 @@ class _AddProfileState extends State<AddProfile> {
                         child: Card(
                           child: ListTile(
                             leading: Icon(
-                              LineAwesomeIcons.address_card,
+                              LineAwesomeIcons.alternate_map_marked,
                               color: Colors.orange,
                             ),
                             title: TextFormField(
+                              controller: _textAddressEditingController,
                               validator: (val) {
                                 if (val.trim().length < 3 || val.isEmpty) {
                                   return 'Vui lòng nhập địa chỉ';
@@ -152,8 +176,15 @@ class _AddProfileState extends State<AddProfile> {
                               onSaved: (val) => _address = val,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Đại chỉ',
+                                hintText: 'Địa chỉ',
                               ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.my_location,
+                                color: Colors.orange,
+                              ),
+                              onPressed: _getUserLocation,
                             ),
                           ),
                         ),
@@ -214,5 +245,11 @@ class _AddProfileState extends State<AddProfile> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _textAddressEditingController.dispose();
+    super.dispose();
   }
 }
