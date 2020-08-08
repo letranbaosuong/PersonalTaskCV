@@ -11,8 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class AddProfile extends StatefulWidget {
-  AddProfile({Key key, this.auth, this.userId, this.logoutCallback})
+class AddProfileScreen extends StatefulWidget {
+  AddProfileScreen({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
 
   final BaseAuth auth;
@@ -20,10 +20,10 @@ class AddProfile extends StatefulWidget {
   final String userId;
 
   @override
-  _AddProfileState createState() => _AddProfileState();
+  _AddProfileScreenState createState() => _AddProfileScreenState();
 }
 
-class _AddProfileState extends State<AddProfile> {
+class _AddProfileScreenState extends State<AddProfileScreen> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final formatDate = DateFormat('dd-MM-yyyy');
   DateTime _selectedDate = DateTime.now();

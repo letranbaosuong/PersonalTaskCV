@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/services/authentication.dart';
 import 'package:flutter_personal_taskcv_app/src/views/fragments/fragments.dart';
-import 'package:flutter_personal_taskcv_app/src/views/screens/add_profile.dart';
+import 'package:flutter_personal_taskcv_app/src/views/screens/add_profile_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => AddProfile(
+            builder: (context) => AddProfileScreen(
               userId: widget.userId,
               auth: widget.auth,
               logoutCallback: widget.logoutCallback,

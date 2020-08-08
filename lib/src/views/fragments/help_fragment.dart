@@ -52,119 +52,122 @@ class _HelpFragmentState extends State<HelpFragment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('assets/images/my_avatar.png'),
+                ),
               ),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/my_avatar.png'),
+              Text(
+                'Lê Trần Bảo Sương',
+                style: GoogleFonts.pacifico(
+                  fontSize: 40.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Text(
-              'Lê Trần Bảo Sương',
-              style: GoogleFonts.pacifico(
-                fontSize: 40.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+              Text(
+                'Software Engineer',
+                style: GoogleFonts.sourceSansPro(
+                  fontSize: 30.0,
+                  color: Colors.orange[50],
+                  letterSpacing: 2.5,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Text(
-              'Software Engineer',
-              style: GoogleFonts.sourceSansPro(
-                fontSize: 30.0,
-                color: Colors.orange[50],
-                letterSpacing: 2.5,
-                fontWeight: FontWeight.bold,
+              SizedBox(
+                height: 20,
+                width: 200,
+                child: Divider(
+                  color: Colors.orange.shade700,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-              width: 200,
-              child: Divider(
-                color: Colors.orange.shade700,
-              ),
-            ),
-            InfoCard(
-              text: phone,
-              icon: Icons.phone,
-              onPressed: () async {
-                String removeSpaceFromPhoneNumber =
-                    phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
-                final phoneCall = 'tel:$removeSpaceFromPhoneNumber';
+              InfoCard(
+                text: phone,
+                icon: Icons.phone,
+                onPressed: () async {
+                  String removeSpaceFromPhoneNumber =
+                      phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
+                  final phoneCall = 'tel:$removeSpaceFromPhoneNumber';
 
-                if (await launcher.canLaunch(phoneCall)) {
-                  await launcher.launch(phoneCall);
-                } else {
-                  _showDialog(
-                    context,
-                    title: 'Xin lỗi!',
-                    msg: 'Số điện thoại không thể được gọi. Vui lòng thử lại!',
-                  );
-                }
-              },
-            ),
-            InfoCard(
-              text: email,
-              icon: Icons.email,
-              onPressed: () async {
-                final emailAddress = 'mailto:$email';
+                  if (await launcher.canLaunch(phoneCall)) {
+                    await launcher.launch(phoneCall);
+                  } else {
+                    _showDialog(
+                      context,
+                      title: 'Xin lỗi!',
+                      msg:
+                          'Số điện thoại không thể được gọi. Vui lòng thử lại!',
+                    );
+                  }
+                },
+              ),
+              InfoCard(
+                text: email,
+                icon: Icons.email,
+                onPressed: () async {
+                  final emailAddress = 'mailto:$email';
 
-                if (await launcher.canLaunch(emailAddress)) {
-                  await launcher.launch(emailAddress);
-                } else {
-                  _showDialog(
-                    context,
-                    title: 'Xin lỗi!',
-                    msg: 'Email không thể được gửi. Vui lòng thử lại!',
-                  );
-                }
-              },
-            ),
-            InfoCard(
-              text: 'Suong Le',
-              icon: FontAwesomeIcons.facebook,
-              onPressed: () async {
-                if (await launcher.canLaunch(urlSocial)) {
-                  await launcher.launch(urlSocial);
-                } else {
-                  _showDialog(
-                    context,
-                    title: 'Xin lỗi!',
-                    msg: 'URL không thể được mở. Vui lòng thử lại!',
-                  );
-                }
-              },
-            ),
-            InfoCard(
-              text: 'Bình Thuận, Quận 7, TP.HCM',
-              icon: Icons.location_city,
-              onPressed: () async {
-                if (await launcher.canLaunch(urlAddress)) {
-                  await launcher.launch(urlAddress);
-                } else {
-                  _showDialog(
-                    context,
-                    title: 'Xin lỗi!',
-                    msg: 'URL không thể được mở. Vui lòng thử lại!',
-                  );
-                }
-              },
-            ),
-          ],
+                  if (await launcher.canLaunch(emailAddress)) {
+                    await launcher.launch(emailAddress);
+                  } else {
+                    _showDialog(
+                      context,
+                      title: 'Xin lỗi!',
+                      msg: 'Email không thể được gửi. Vui lòng thử lại!',
+                    );
+                  }
+                },
+              ),
+              InfoCard(
+                text: 'Suong Le',
+                icon: FontAwesomeIcons.facebook,
+                onPressed: () async {
+                  if (await launcher.canLaunch(urlSocial)) {
+                    await launcher.launch(urlSocial);
+                  } else {
+                    _showDialog(
+                      context,
+                      title: 'Xin lỗi!',
+                      msg: 'URL không thể được mở. Vui lòng thử lại!',
+                    );
+                  }
+                },
+              ),
+              InfoCard(
+                text: 'Bình Thuận, Quận 7, TP.HCM',
+                icon: Icons.location_city,
+                onPressed: () async {
+                  if (await launcher.canLaunch(urlAddress)) {
+                    await launcher.launch(urlAddress);
+                  } else {
+                    _showDialog(
+                      context,
+                      title: 'Xin lỗi!',
+                      msg: 'URL không thể được mở. Vui lòng thử lại!',
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
       backgroundColor: Colors.orange[200],

@@ -4,6 +4,8 @@ import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 class Project {
   String id;
   String name;
+  String description;
+  String location;
   DateTime dateTimeStart;
   DateTime dateTimeEnd;
   bool completed;
@@ -13,6 +15,8 @@ class Project {
   Project({
     @required this.id,
     @required this.name,
+    @required this.description,
+    @required this.location,
     @required this.dateTimeStart,
     @required this.dateTimeEnd,
     @required this.completed,
@@ -23,6 +27,8 @@ class Project {
   Project.fromSnapshot(dynamic snapshot)
       : id = snapshot['Id'],
         name = snapshot['Name'],
+        description = snapshot['Description'],
+        location = snapshot['Location'],
         dateTimeStart =
             DateTime.fromMillisecondsSinceEpoch(snapshot['DateTimeStart']),
         dateTimeEnd =
@@ -36,6 +42,8 @@ class Project {
     return {
       'Id': id,
       'Name': name,
+      'Description': description,
+      'Location': location,
       'DateTimeStart': dateTimeStart.millisecondsSinceEpoch,
       'DateTimeEnd': dateTimeEnd.millisecondsSinceEpoch,
       'Completed': completed,
@@ -49,6 +57,8 @@ class Project {
     return '''Project{ 
       Id: $id,
       Name: $name,
+      Description: $description,
+      Location: $location,
       DateTimeStart: $dateTimeStart,
       DateTimeEnd: $dateTimeEnd,
       Completed: $completed,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Task {
   String id;
   String name;
+  String description;
   DateTime dateTimeStart;
   DateTime dateTimeEnd;
   bool completed;
@@ -11,6 +12,7 @@ class Task {
   Task({
     @required this.id,
     @required this.name,
+    @required this.description,
     @required this.dateTimeStart,
     @required this.dateTimeEnd,
     @required this.completed,
@@ -20,6 +22,7 @@ class Task {
   Task.fromSnapshot(dynamic snapshot)
       : id = snapshot['Id'],
         name = snapshot['Name'],
+        description = snapshot['Description'],
         dateTimeStart =
             DateTime.fromMillisecondsSinceEpoch(snapshot['DateTimeStart']),
         dateTimeEnd =
@@ -32,6 +35,7 @@ class Task {
     return {
       'Id': id,
       'Name': name,
+      'Description': description,
       'DateTimeStart': dateTimeStart.millisecondsSinceEpoch,
       'DateTimeEnd': dateTimeEnd.millisecondsSinceEpoch,
       'Completed': completed,
@@ -44,6 +48,7 @@ class Task {
     return '''Task{ 
       Id: $id,
       Name: $name,
+      Description: $description,
       DateTimeStart: $dateTimeStart,
       DateTimeEnd: $dateTimeEnd,
       Completed: $completed,
