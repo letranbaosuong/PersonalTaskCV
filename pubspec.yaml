@@ -43,6 +43,7 @@ dependencies:
   geolocator: any
   rounded_loading_button: any
   percent_indicator: any
+  charts_flutter: any
 
 dev_dependencies:
   flutter_test:

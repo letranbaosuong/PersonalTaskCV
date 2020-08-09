@@ -28,6 +28,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
 
   List<Task> _listTask;
+  double _percentCompleted;
 
   _deleteTask(Task task) {
     _database
@@ -78,6 +79,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
   @override
   void initState() {
     _listTask = List();
+    _percentCompleted = 0.0;
     super.initState();
   }
 
@@ -267,139 +269,140 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
         title: Text('Chi tiết dự án'),
         centerTitle: true,
       ),
-      body: Container(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 20),
-              child: Text(
-                widget.project.name,
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                softWrap: false,
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: LinearPercentIndicator(
-                    animation: true,
-                    lineHeight: 14.0,
-                    animationDuration: 1500,
-                    percent: 0.8,
-                    center: Text(
-                      "80.0%",
-                      style: TextStyle(fontSize: 12.0),
+      body: StreamBuilder(
+        stream: _database
+            .reference()
+            .child('Tasks')
+            .child(widget.userId)
+            .child(widget.project.id)
+            .onValue,
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData &&
+              !snapshot.hasError &&
+              snapshot.data.snapshot.value != null) {
+            _listTask.clear();
+            /* // [{}, {}, {},...]
+                        var valuesProject = snapshot.data.snapshot.value;
+                        //print(valuesProject);
+                        valuesProject.forEach((itemProject) {
+                          if (itemProject != null) {
+                            _listTask.add(Project.fromSnapshot(itemProject));
+                          } else {
+          //               print(object)
+                          }
+                        });
+                        */
+
+            // { key: {}, key: {}, key: {},... }
+            Map<dynamic, dynamic> valueTasks = snapshot.data.snapshot.value;
+            valueTasks.forEach((key, itemTask) {
+              if (itemTask != null) {
+                _listTask.add(Task.fromSnapshot(itemTask));
+              } else {}
+            });
+
+            _listTask
+                .sort((a, b) => a.dateTimeStart.compareTo(b.dateTimeStart));
+
+            int dem = 0;
+            _listTask.forEach((task) {
+              if (task.completed) {
+                dem++;
+              }
+            });
+            _percentCompleted = dem / _listTask.length;
+
+            return Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 20),
+                    child: Text(
+                      widget.project.name,
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      softWrap: false,
                     ),
-                    linearStrokeCap: LinearStrokeCap.roundAll,
-                    progressColor: Colors.green,
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Text(
-                widget.project.description,
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-                softWrap: false,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, bottom: 5),
-              child: Text(
-                'Danh sách nhiệm vụ',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-            SizedBox(
-              child: Divider(
-                color: Colors.orange.shade700,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: StreamBuilder(
-                  stream: _database
-                      .reference()
-                      .child('Tasks')
-                      .child(widget.userId)
-                      .child(widget.project.id)
-                      .onValue,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData &&
-                        !snapshot.hasError &&
-                        snapshot.data.snapshot.value != null) {
-                      _listTask.clear();
-                      /* // [{}, {}, {},...]
-                      var valuesProject = snapshot.data.snapshot.value;
-                      //print(valuesProject);
-                      valuesProject.forEach((itemProject) {
-                        if (itemProject != null) {
-                          _listTask.add(Project.fromSnapshot(itemProject));
-                        } else {
-        //               print(object)
-                        }
-                      });
-                      */
-
-                      // { key: {}, key: {}, key: {},... }
-                      Map<dynamic, dynamic> valueTasks =
-                          snapshot.data.snapshot.value;
-                      valueTasks.forEach((key, itemTask) {
-                        if (itemTask != null) {
-                          _listTask.add(Task.fromSnapshot(itemTask));
-                        } else {}
-                      });
-
-                      _listTask.sort(
-                          (a, b) => a.dateTimeStart.compareTo(b.dateTimeStart));
-
-                      return ListView.builder(
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: LinearPercentIndicator(
+                          animation: true,
+                          lineHeight: 16.0,
+                          animationDuration: 200,
+                          percent: _percentCompleted,
+                          center: Text(
+                            (_percentCompleted * 100).round().toString() + '%',
+                            style: TextStyle(fontSize: 14.0),
+                          ),
+                          linearStrokeCap: LinearStrokeCap.roundAll,
+                          progressColor: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text(
+                      widget.project.description,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                      softWrap: false,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, bottom: 5),
+                    child: Text(
+                      'Danh sách nhiệm vụ',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Divider(
+                      color: Colors.orange.shade700,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: ListView.builder(
                         itemCount: _listTask.length,
                         itemBuilder: (BuildContext context, int index) =>
                             _buildTaskCard(context, index),
-                      );
-                    } else {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Không có nhiệm vụ nào.',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                      // return ListView.builder(
-                      //   itemCount: 5,
-                      //   itemBuilder: (BuildContext context, int index) =>
-                      //       _buildTaskCard(context, index),
-                      // );
-                    }
-                  },
-                ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
+            );
+          } else {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Không có nhiệm vụ nào.',
+                      style: TextStyle(
+                        fontSize: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

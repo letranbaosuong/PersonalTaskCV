@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
   final drawerItems = [
     DrawerItem('Hồ sơ', FontAwesomeIcons.userCircle),
     DrawerItem('Dự án', FontAwesomeIcons.tasks),
-    DrawerItem('Thiết lập', FontAwesomeIcons.cog),
+    DrawerItem('Thống kê', FontAwesomeIcons.chartBar),
     DrawerItem('Trợ giúp', FontAwesomeIcons.questionCircle),
     DrawerItem('Đăng xuất', FontAwesomeIcons.signOutAlt),
   ];
@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
           logoutCallback: widget.logoutCallback,
         );
       case 2:
-        return SettingFragment(
+        return StatisticalFragment(
           userId: widget.userId,
           auth: widget.auth,
           logoutCallback: widget.logoutCallback,

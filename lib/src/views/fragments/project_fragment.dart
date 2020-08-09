@@ -2,7 +2,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 import 'package:flutter_personal_taskcv_app/src/services/authentication.dart';
+import 'package:flutter_personal_taskcv_app/src/services/services.dart';
 import 'package:flutter_personal_taskcv_app/src/views/screens/screens.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class ProjectFragment extends StatefulWidget {
@@ -21,6 +23,9 @@ class _ProjectFragmentState extends State<ProjectFragment> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
 
   List<Project> _listProject;
+  List<double> _listPercentCompleted;
+  double _percentCompleted;
+  IServiceDAO _serviceDAO = ServiceDAOImpl();
 
   void showInSnackBar(String value) {
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(value)));
@@ -110,6 +115,8 @@ class _ProjectFragmentState extends State<ProjectFragment> {
   @override
   void initState() {
     _listProject = List();
+    _percentCompleted = 0.0;
+    _listPercentCompleted = List();
     super.initState();
   }
 
@@ -123,6 +130,7 @@ class _ProjectFragmentState extends State<ProjectFragment> {
             !snapshot.hasError &&
             snapshot.data.snapshot.value != null) {
           _listProject.clear();
+          _listPercentCompleted.clear();
           /* // [{}, {}, {},...]
           var valuesProject = snapshot.data.snapshot.value;
           //print(valuesProject);
@@ -146,26 +154,26 @@ class _ProjectFragmentState extends State<ProjectFragment> {
           _listProject
               .sort((a, b) => a.dateTimeStart.compareTo(b.dateTimeStart));
 
-          // for (int i = 0; i < _listProject.length; i++) {
-          //   if (_listProject[i].status == 1 &&
-          //       _listProject[i].type == 'light') {
-          //     _image.add(_imageLightOn);
-          //   } else if (_listProject[i].status == 0 &&
-          //       _listProject[i].type == 'light') {
-          //     _image.add(_imageLightOff);
-          //   } else if (_listProject[i].type == 'temperature') {
-          //     _image.add(_imageTemperature);
-          //   } else if (_listProject[i].type == 'humidity') {
-          //     _image.add(_imageHumidity);
-          //   }
-          // }
+          // for (int i = 0; i < _listProject.length; i++)
+          //   _serviceDAO
+          //       .getListTask(widget.userId, _listProject[i])
+          //       .then((tasks) {
+          //     int dem = 0;
+          //     tasks.forEach((task) {
+          //       if (task.completed) {
+          //         dem++;
+          //       }
+          //     });
+          //     _percentCompleted = dem / _listProject.length;
+          //     _listPercentCompleted.add(_percentCompleted);
+          //     print(_percentCompleted);
+          //   });
 
           return Scaffold(
             body: GridView.count(
               crossAxisCount: 2,
-              children: List.generate(
-                _listProject.length,
-                (index) => Container(
+              children: List.generate(_listProject.length, (index) {
+                return Container(
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -241,48 +249,26 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                               ],
                             ),
                           ),
+                          // Align(
+                          //   alignment: Alignment.center,
+                          //   child: CircularPercentIndicator(
+                          //     animation: true,
+                          //     radius: 75.0,
+                          //     percent: 0.0,
+                          //     lineWidth: 5.0,
+                          //     circularStrokeCap: CircularStrokeCap.round,
+                          //     backgroundColor: Colors.orange[100],
+                          //     progressColor: Colors.orange,
+                          //     center: Text(
+                          //       '${(0.0 * 100).round()}%',
+                          //       style: TextStyle(
+                          //         fontWeight: FontWeight.w700,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           Align(
                             alignment: Alignment.center,
-                            child: Builder(
-                              builder: (BuildContext context) {
-                                if (_listProject[index].listTask != null) {
-                                  return CircularPercentIndicator(
-                                    animation: true,
-                                    radius: 75.0,
-                                    percent: 0.6,
-                                    lineWidth: 5.0,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    backgroundColor: Colors.orange[100],
-                                    progressColor: Colors.orange,
-                                    center: Text(
-                                      '${(0.6 * 100).round()}%',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  return CircularPercentIndicator(
-                                    animation: true,
-                                    radius: 75.0,
-                                    percent: 0.0,
-                                    lineWidth: 5.0,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    backgroundColor: Colors.orange[100],
-                                    progressColor: Colors.orange,
-                                    center: Text(
-                                      '${(0.0 * 100).round()}%',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 10),
                               child: Text(
@@ -295,12 +281,38 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                               ),
                             ),
                           ),
+                          Align(
+                            alignment: Alignment(0, 0.7),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                '${DateFormat('dd/MM/yyyy').format(_listProject[index].dateTimeStart)}',
+                                style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                '${DateFormat('dd/MM/yyyy').format(_listProject[index].dateTimeEnd)}',
+                                style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
