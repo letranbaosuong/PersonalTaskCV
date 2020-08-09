@@ -206,6 +206,18 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                         //     _listProject[index].type == 'light') {
                         //   _image[index] = _imageLightOff;
                         // }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailProjectScreen(
+                              userId: widget.userId,
+                              auth: widget.auth,
+                              logoutCallback: widget.logoutCallback,
+                              project: _listProject[index],
+                            ),
+                          ),
+                        );
                       });
                     },
                     child: Center(

@@ -54,6 +54,7 @@ class _HelpFragmentState extends State<HelpFragment> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Padding(padding: const EdgeInsets.only(top: 15)),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
