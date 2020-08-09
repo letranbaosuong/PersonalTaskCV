@@ -7,21 +7,22 @@ import 'package:flutter_personal_taskcv_app/src/services/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:uuid/uuid.dart';
 
-class AddProjectScreen extends StatefulWidget {
-  AddProjectScreen({Key key, this.auth, this.userId, this.logoutCallback})
+class EditProjectScreen extends StatefulWidget {
+  EditProjectScreen(
+      {Key key, this.auth, this.userId, this.logoutCallback, this.project})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
+  final Project project;
 
   @override
-  _AddProjectScreenState createState() => _AddProjectScreenState();
+  _EditProjectScreenState createState() => _EditProjectScreenState();
 }
 
-class _AddProjectScreenState extends State<AddProjectScreen> {
+class _EditProjectScreenState extends State<EditProjectScreen> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final formatDate = DateFormat('dd-MM-yyyy');
   final formatTime = DateFormat('kk:mm');
@@ -35,11 +36,50 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   String _nameProject;
   String _location;
   String _description;
-  var _uuid = Uuid();
 
   @override
   void initState() {
     _textLocationEditingController = TextEditingController();
+    // _database
+    //     .reference()
+    //     .child('Users')
+    //     .child(widget.userId)
+    //     .child('Projects')
+    //     .child(widget.project.id)
+    //     .once()
+    //     .then((snapshot) {
+    //   // print(snapshot.value);
+    //   Map<dynamic, dynamic> valueProjects = snapshot.value;
+    //   valueProjects.forEach((key, item) {
+    //     if (item != null) {
+    //       _nameProject = item['Name'];
+    //       print(_nameProject);
+    //     } else {}
+    //   });
+    // });
+    _nameProject = widget.project.name;
+    _location = widget.project.location;
+    _textLocationEditingController.text = _location;
+    _description = widget.project.description;
+    _selectedDateStart = DateTime(
+      widget.project.dateTimeStart.year,
+      widget.project.dateTimeStart.month,
+      widget.project.dateTimeStart.day,
+    );
+    _selectedTimeStart = TimeOfDay(
+      hour: widget.project.dateTimeStart.hour,
+      minute: widget.project.dateTimeStart.minute,
+    );
+    _selectedDateEnd = DateTime(
+      widget.project.dateTimeEnd.year,
+      widget.project.dateTimeEnd.month,
+      widget.project.dateTimeEnd.day,
+    );
+    _selectedTimeEnd = TimeOfDay(
+      hour: widget.project.dateTimeEnd.hour,
+      minute: widget.project.dateTimeEnd.minute,
+    );
+
     super.initState();
   }
 
@@ -131,7 +171,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Thêm dự án mới'),
+        title: Text('Sửa dự án'),
         centerTitle: true,
       ),
       body: Form(
@@ -149,6 +189,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     color: Colors.orange,
                   ),
                   title: TextFormField(
+                    initialValue: _nameProject,
                     onChanged: (val) => setState(() => _nameProject = val),
                     validator: (val) {
                       if (val.trim().length < 3 || val.isEmpty) {
@@ -377,6 +418,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     color: Colors.orange,
                   ),
                   title: TextFormField(
+                    initialValue: _description,
                     keyboardType: TextInputType.multiline,
                     maxLines: 6,
                     onChanged: (val) => setState(() => _description = val),
@@ -418,15 +460,13 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                   FlatButton(
                     color: Colors.orange,
                     child: const Text(
-                      'Thêm',
+                      'Sửa',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        // _formKey.currentState.save();
-                        String v1 = _uuid.v1();
                         DateTime tamStart = DateTime(
                           _selectedDateStart.year,
                           _selectedDateStart.month,
@@ -442,19 +482,15 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                           _selectedTimeEnd.minute,
                         );
                         Project project = Project(
-                          id: v1,
+                          id: widget.project.id,
                           name: _nameProject,
                           description: _description,
                           location: _location,
                           dateTimeStart: tamStart,
                           dateTimeEnd: tamEnd,
-                          dateTimeReminder: tamStart.subtract(
-                            Duration(
-                              days: 7,
-                            ),
-                          ),
-                          completed: false,
-                          isReminder: false,
+                          dateTimeReminder: widget.project.dateTimeReminder,
+                          completed: widget.project.completed,
+                          isReminder: widget.project.isReminder,
                           listTask: [],
                         );
                         _setProject(project);

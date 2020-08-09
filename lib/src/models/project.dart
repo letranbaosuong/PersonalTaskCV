@@ -9,6 +9,7 @@ class Project {
   DateTime dateTimeStart;
   DateTime dateTimeEnd;
   bool completed;
+  bool isReminder;
   DateTime dateTimeReminder;
   List<Task> listTask;
 
@@ -20,6 +21,7 @@ class Project {
     @required this.dateTimeStart,
     @required this.dateTimeEnd,
     @required this.completed,
+    @required this.isReminder,
     @required this.dateTimeReminder,
     @required this.listTask,
   });
@@ -34,6 +36,7 @@ class Project {
         dateTimeEnd =
             DateTime.fromMillisecondsSinceEpoch(snapshot['DateTimeEnd']),
         completed = snapshot['Completed'],
+        isReminder = snapshot['IsReminder'],
         dateTimeReminder =
             DateTime.fromMillisecondsSinceEpoch(snapshot['DateTimeReminder']),
         listTask = snapshot['ListTask'];
@@ -47,6 +50,7 @@ class Project {
       'DateTimeStart': dateTimeStart.millisecondsSinceEpoch,
       'DateTimeEnd': dateTimeEnd.millisecondsSinceEpoch,
       'Completed': completed,
+      'IsReminder': isReminder,
       'DateTimeReminder': dateTimeReminder.millisecondsSinceEpoch,
       'ListTask': listTask,
     };
@@ -62,6 +66,7 @@ class Project {
       DateTimeStart: $dateTimeStart,
       DateTimeEnd: $dateTimeEnd,
       Completed: $completed,
+      IsReminder: $isReminder,
       DateTimeReminder: $dateTimeReminder,
       ListTask: $listTask,
      }''';

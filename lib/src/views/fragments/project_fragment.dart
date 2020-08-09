@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 import 'package:flutter_personal_taskcv_app/src/services/authentication.dart';
 import 'package:flutter_personal_taskcv_app/src/views/screens/screens.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:uuid/uuid.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class ProjectFragment extends StatefulWidget {
   ProjectFragment({Key key, this.auth, this.userId, this.logoutCallback})
@@ -22,268 +21,9 @@ class _ProjectFragmentState extends State<ProjectFragment> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
 
   List<Project> _listProject;
-  var _uuid = Uuid();
-
-  // final _textIdDeviceController = TextEditingController();
-  final _textNameProjectController = TextEditingController();
 
   void showInSnackBar(String value) {
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(value)));
-  }
-
-  showAddProjectDialog(BuildContext context) async {
-    _textNameProjectController.clear();
-
-    await showGeneralDialog<String>(
-      barrierDismissible: false,
-      barrierColor: Colors.orangeAccent,
-      transitionDuration: const Duration(milliseconds: 500),
-      context: context,
-      pageBuilder: (BuildContext context, Animation animation,
-          Animation secondAnimation) {
-        // StatefulBuilder(
-        //     builder: (BuildContext context,
-        //         void Function(void Function()) setState) {
-        //       return Wrap(
-        //         children: [
-        //           TextField(
-        //             controller: _textNameProjectController,
-        //             autofocus: true,
-        //             decoration: InputDecoration(
-        //               labelText: 'Tên dự án',
-        //             ),
-        //           ),
-        //           TextField(
-        //             controller: _textNameProjectController,
-        //             autofocus: true,
-        //             decoration: InputDecoration(
-        //               labelText: 'Tên dự án',
-        //             ),
-        //           ),
-        //         ],
-        //       );
-        //     },
-        //   ),
-        //   FlatButton(
-        //       child: const Text('Thêm'),
-        //       onPressed: () {
-        //         String v1 = _uuid.v1();
-        //         Project project = Project(
-        //           id: v1,
-        //           name: _textNameProjectController.text.toString().trim(),
-        //           dateTimeStart: null,
-        //           dateTimeEnd: null,
-        //           dateTimeReminder: null,
-        //           completed: false,
-        //           listTask: [],
-        //         );
-        //         setProject(project);
-        //         Navigator.pop(context);
-        //       },
-        //     )
-        return Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width - 10,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Form(
-                    // key: _formKey,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0),
-                          child: Card(
-                            child: ListTile(
-                              leading: Icon(
-                                LineAwesomeIcons.user,
-                                color: Colors.orange,
-                              ),
-                              title: TextFormField(
-                                // initialValue: _dataUserCurrent.name,
-                                onChanged: (val) async {
-                                  // await SharedPreferencesHelper.setTen(val);
-                                },
-                                // controller: _textUserNameEditingController
-                                //   ..text = _userName,
-                                validator: (val) {
-                                  if (val.trim().length < 3 || val.isEmpty) {
-                                    return 'Tên quá ngắn';
-                                  } else if (val.trim().length > 256) {
-                                    return 'Tên quá dài';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                // onSaved: (val) => _userName = val,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Tên',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0),
-                          child: Card(
-                            child: ListTile(
-                              leading: Icon(
-                                LineAwesomeIcons.alternate_map_marked,
-                                color: Colors.orange,
-                              ),
-                              title: TextFormField(
-                                // initialValue: _dataUserCurrent.address,
-                                onChanged: (val) async {
-                                  // await SharedPreferencesHelper.setDiachi(val);
-                                },
-                                // controller: _textAddressEditingController,
-                                validator: (val) {
-                                  if (val.trim().length < 3 || val.isEmpty) {
-                                    return 'Vui lòng nhập mô tả';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                // onSaved: (val) => _address = val,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Mô tả',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 0.0),
-                          child: Row(
-                            children: [
-                              Card(
-                                child: ListTile(
-                                  leading: Icon(
-                                    LineAwesomeIcons.birthday_cake,
-                                    color: Colors.orange,
-                                  ),
-                                  title: Text('Bắt đầu'),
-                                ),
-                              ),
-                              Card(
-                                child: ListTile(
-                                  leading: Icon(
-                                    LineAwesomeIcons.birthday_cake,
-                                    color: Colors.orange,
-                                  ),
-                                  title: Text('giờ'),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  showEditProjectDialog(BuildContext context, Project project) async {
-    await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        // if (project.type == 'light') {
-        //   _selectedItem = _dropdownMenuItems[0].value;
-        // } else if (project.type == 'temperature') {
-        //   _selectedItem = _dropdownMenuItems[1].value;
-        // } else if (project.type == 'humidity') {
-        //   _selectedItem = _dropdownMenuItems[2].value;
-        // }
-
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Wrap(
-                children: [
-                  TextField(
-                    controller: _textNameProjectController..text = project.name,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: 'Tên dự án',
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 10),
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Text('Loại dự án'),
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(top: 5),
-                  //         child: Container(
-                  //           width: double.infinity,
-                  //           padding:
-                  //               const EdgeInsets.only(left: 10.0, right: 10.0),
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(10.0),
-                  //             border: Border.all(),
-                  //           ),
-                  //           child: DropdownButtonHideUnderline(
-                  //             child: DropdownButton(
-                  //               value: _selectedItem,
-                  //               items: _dropdownMenuItems,
-                  //               onChanged: (value) {
-                  //                 setState(() {
-                  //                   _selectedItem = value;
-                  //                 });
-                  //               },
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                ],
-              );
-            },
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('Huỷ'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: const Text('Sửa'),
-              onPressed: () {
-                Project projectEdit = Project(
-                  id: project.id,
-                  name: _textNameProjectController.text.toString().trim(),
-                  dateTimeStart: null,
-                  dateTimeEnd: null,
-                  dateTimeReminder: null,
-                  completed: false,
-                  listTask: [],
-                );
-                setProject(projectEdit);
-                Navigator.pop(context);
-              },
-            )
-          ],
-        );
-      },
-    );
   }
 
   // List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
@@ -316,7 +56,17 @@ class _ProjectFragmentState extends State<ProjectFragment> {
         onSelected: (value) {
           if (value == 1) {
             print('sua ${project.id}');
-            showEditProjectDialog(context, project);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditProjectScreen(
+                  userId: widget.userId,
+                  auth: widget.auth,
+                  logoutCallback: widget.logoutCallback,
+                  project: project,
+                ),
+              ),
+            );
           } else if (value == 2) {
             print('xoa ${project.id}');
             deleteProject(project);
@@ -327,30 +77,35 @@ class _ProjectFragmentState extends State<ProjectFragment> {
   deleteProject(Project project) {
     _database
         .reference()
-        .child('Users')
-        .child(widget.userId)
         .child('Projects')
+        .child(widget.userId)
         .child('${project.id}')
         .remove()
         .then((_) {
       setState(() {
-        //_listProject.removeAt(projectId);
         print('xoa thanh cong ${project.id}');
       });
     });
   }
 
-  setProject(Project project) {
-    if (project != null) {
-      _database
-          .reference()
-          .child('Users')
-          .child('${widget.userId}')
-          .child('Projects')
-          .child('${project.id}')
-          .set(project.toJson());
-    }
-  }
+  Widget _notificationProject(Project project) => IconButton(
+        icon: project.isReminder
+            ? Icon(Icons.notifications_active)
+            : Icon(Icons.notifications),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NotificationProjectScreen(
+                userId: widget.userId,
+                auth: widget.auth,
+                logoutCallback: widget.logoutCallback,
+                project: project,
+              ),
+            ),
+          );
+        },
+      );
 
   @override
   void initState() {
@@ -361,12 +116,8 @@ class _ProjectFragmentState extends State<ProjectFragment> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _database
-          .reference()
-          .child('Users')
-          .child(widget.userId)
-          .child('Projects')
-          .onValue,
+      stream:
+          _database.reference().child('Projects').child(widget.userId).onValue,
       builder: (context, AsyncSnapshot<Event> snapshot) {
         if (snapshot.hasData &&
             !snapshot.hasError &&
@@ -392,7 +143,8 @@ class _ProjectFragmentState extends State<ProjectFragment> {
             } else {}
           });
 
-          // _listProject.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+          _listProject
+              .sort((a, b) => a.dateTimeStart.compareTo(b.dateTimeStart));
 
           // for (int i = 0; i < _listProject.length; i++) {
           //   if (_listProject[i].status == 1 &&
@@ -420,7 +172,7 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                       width: 1,
                       color: Colors.green,
                     ),
-                    //borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: InkWell(
                     onTap: () {
@@ -460,6 +212,10 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                       child: Stack(
                         children: [
                           Align(
+                            alignment: Alignment.topLeft,
+                            child: _notificationProject(_listProject[index]),
+                          ),
+                          Align(
                             alignment: Alignment.topRight,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -473,41 +229,60 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                               ],
                             ),
                           ),
-                          // Align(
-                          //   alignment: Alignment.center,
-                          //   child: _image[index],
-                          // ),
-                          // Align(
-                          //   alignment: Alignment.bottomCenter,
-                          //   child: Padding(
-                          //     padding: EdgeInsets.only(bottom: 10),
-                          //     child: _listProject[index].type == 'light'
-                          //         ? Text(
-                          //             '${_listProject[index].name}',
-                          //             style: TextStyle(
-                          //               color: Colors.deepOrange,
-                          //               fontSize: 20,
-                          //             ),
-                          //           )
-                          //         : _listProject[index].type == 'temperature'
-                          //             ? Text(
-                          //                 '${_listProject[index].data}°C',
-                          //                 style: TextStyle(
-                          //                   color: Colors.deepOrange,
-                          //                   fontSize: 20,
-                          //                 ),
-                          //               )
-                          //             : _listProject[index].type == 'humidity'
-                          //                 ? Text(
-                          //                     '${_listProject[index].data}%',
-                          //                     style: TextStyle(
-                          //                       color: Colors.deepOrange,
-                          //                       fontSize: 20,
-                          //                     ),
-                          //                   )
-                          //                 : Text('Ok'),
-                          //   ),
-                          // ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Builder(
+                              builder: (BuildContext context) {
+                                if (_listProject[index].listTask != null) {
+                                  return CircularPercentIndicator(
+                                    animation: true,
+                                    radius: 75.0,
+                                    percent: 0.6,
+                                    lineWidth: 5.0,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    backgroundColor: Colors.orange[100],
+                                    progressColor: Colors.orange,
+                                    center: Text(
+                                      '${(0.6 * 100).round()}%',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return CircularPercentIndicator(
+                                    animation: true,
+                                    radius: 75.0,
+                                    percent: 0.0,
+                                    lineWidth: 5.0,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    backgroundColor: Colors.orange[100],
+                                    progressColor: Colors.orange,
+                                    center: Text(
+                                      '${(0.0 * 100).round()}%',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                '${_listProject[index].name}',
+                                style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -517,7 +292,6 @@ class _ProjectFragmentState extends State<ProjectFragment> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                // showAddProjectDialog(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -534,21 +308,6 @@ class _ProjectFragmentState extends State<ProjectFragment> {
             ),
           );
         } else {
-//          WidgetsBinding.instance.addPostFrameCallback((_) {
-//            Scaffold.of(context)
-//              ..hideCurrentSnackBar()
-//              ..showSnackBar(
-//                SnackBar(
-//                  content: Text(
-//                    'Vui lòng thêm dự án!',
-//                    style: TextStyle(
-//                      color: Colors.white,
-//                      fontSize: 25,
-//                    ),
-//                  ),
-//                ),
-//              );
-//          });
           return Scaffold(
             body: Center(
               child: Column(
@@ -570,7 +329,6 @@ class _ProjectFragmentState extends State<ProjectFragment> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                // showAddProjectDialog(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

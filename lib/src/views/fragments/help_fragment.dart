@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/services/authentication.dart';
 import 'package:flutter_personal_taskcv_app/src/views/widgets/widgets.dart';
@@ -25,8 +24,6 @@ class HelpFragment extends StatefulWidget {
 }
 
 class _HelpFragmentState extends State<HelpFragment> {
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
-
   void _showDialog(BuildContext context, {String title, String msg}) {
     final dialog = AlertDialog(
       title: Text(title),
