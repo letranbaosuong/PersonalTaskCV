@@ -44,6 +44,18 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
     });
   }
 
+  _setTask(Task task) {
+    if (task != null) {
+      _database
+          .reference()
+          .child('Tasks')
+          .child(widget.userId)
+          .child(widget.project.id)
+          .child(task.id)
+          .set(task.toJson());
+    }
+  }
+
   Widget _notificationTask(Task task) => IconButton(
         icon: task.isReminder
             ? Icon(Icons.notifications_active)
@@ -95,7 +107,20 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                               Icons.check_box,
                               color: Colors.green,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Task taskTam = Task(
+                                id: task.id,
+                                name: task.name,
+                                description: task.description,
+                                location: task.location,
+                                dateTimeStart: task.dateTimeStart,
+                                dateTimeEnd: task.dateTimeEnd,
+                                dateTimeReminder: task.dateTimeReminder,
+                                completed: false,
+                                isReminder: task.isReminder,
+                              );
+                              _setTask(taskTam);
+                            },
                           ),
                         ],
                       ),
@@ -116,7 +141,20 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                               Icons.check_box_outline_blank,
                               color: Colors.green,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Task taskTam = Task(
+                                id: task.id,
+                                name: task.name,
+                                description: task.description,
+                                location: task.location,
+                                dateTimeStart: task.dateTimeStart,
+                                dateTimeEnd: task.dateTimeEnd,
+                                dateTimeReminder: task.dateTimeReminder,
+                                completed: true,
+                                isReminder: task.isReminder,
+                              );
+                              _setTask(taskTam);
+                            },
                           ),
                         ],
                       ),
@@ -149,14 +187,40 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                               Icons.notifications_active,
                               color: Colors.blue,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NotificationTaskScreen(
+                                    userId: widget.userId,
+                                    auth: widget.auth,
+                                    logoutCallback: widget.logoutCallback,
+                                    project: widget.project,
+                                    task: task,
+                                  ),
+                                ),
+                              );
+                            },
                           )
                         : IconButton(
                             icon: Icon(
                               Icons.notifications_none,
                               color: Colors.redAccent,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NotificationTaskScreen(
+                                    userId: widget.userId,
+                                    auth: widget.auth,
+                                    logoutCallback: widget.logoutCallback,
+                                    project: widget.project,
+                                    task: task,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                     Spacer(),
                     IconButton(
