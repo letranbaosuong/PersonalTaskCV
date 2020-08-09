@@ -164,7 +164,20 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                         Icons.edit,
                         color: Colors.orangeAccent,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditTaskScreen(
+                              userId: widget.userId,
+                              auth: widget.auth,
+                              logoutCallback: widget.logoutCallback,
+                              project: widget.project,
+                              task: task,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     IconButton(
                       icon: Icon(
@@ -341,6 +354,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
         tooltip: 'Thêm nhiệm vụ',
         child: Icon(Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
