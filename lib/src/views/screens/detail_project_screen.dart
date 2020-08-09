@@ -29,7 +29,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
 
   List<Task> _listTask;
 
-  deleteTask(Task task) {
+  _deleteTask(Task task) {
     _database
         .reference()
         .child('Tasks')
@@ -70,20 +70,20 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
   }
 
   Widget _buildTaskCard(BuildContext context, int index) {
-    // final task = _listTask[index];
+    final task = _listTask[index];
     return Container(
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
-              true
+              task.completed
                   ? Padding(
                       padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
                       child: Row(
                         children: <Widget>[
                           Text(
-                            'Tên nhiệm vụ',
+                            '${task.name}',
                             style: TextStyle(
                               fontSize: 20,
                               decoration: TextDecoration.lineThrough,
@@ -105,7 +105,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            'Tên nhiệm vụ',
+                            '${task.name}',
                             style: TextStyle(
                               fontSize: 20,
                             ),
@@ -125,7 +125,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Row(children: <Widget>[
                   Text(
-                    "Mô tả sương sương dfdasf\nsdfasd",
+                    '${task.description}',
                   ),
                   Spacer(),
                 ]),
@@ -133,7 +133,8 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Row(children: <Widget>[
-                  Text('Ngày bắt đầu - Ngày kết thúc'),
+                  Text(
+                      '${DateFormat('dd/MM/yyyy').format(task.dateTimeStart)} - ${DateFormat('dd/MM/yyyy').format(task.dateTimeEnd)}'),
                   Spacer(),
                 ]),
               ),
@@ -142,7 +143,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    false
+                    task.isReminder
                         ? IconButton(
                             icon: Icon(
                               Icons.notifications_active,
@@ -170,7 +171,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                         Icons.delete,
                         color: Colors.red,
                       ),
-                      onPressed: () {},
+                      onPressed: () => _deleteTask(task),
                     ),
                   ],
                 ),
@@ -292,29 +293,29 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                             _buildTaskCard(context, index),
                       );
                     } else {
-                      // return Center(
-                      //   child: Column(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: [
-                      //       CircularProgressIndicator(),
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(8.0),
-                      //         child: Text(
-                      //           'Không có nhiệm vụ nào.',
-                      //           style: TextStyle(
-                      //             fontSize: 25,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // );
-                      return ListView.builder(
-                        itemCount: 5,
-                        itemBuilder: (BuildContext context, int index) =>
-                            _buildTaskCard(context, index),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Không có nhiệm vụ nào.',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
+                      // return ListView.builder(
+                      //   itemCount: 5,
+                      //   itemBuilder: (BuildContext context, int index) =>
+                      //       _buildTaskCard(context, index),
+                      // );
                     }
                   },
                 ),
@@ -328,10 +329,11 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddProjectScreen(
+              builder: (context) => AddTaskScreen(
                 userId: widget.userId,
                 auth: widget.auth,
                 logoutCallback: widget.logoutCallback,
+                project: widget.project,
               ),
             ),
           );
