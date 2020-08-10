@@ -37,6 +37,24 @@ class _NotificationTaskScreenState extends State<NotificationTaskScreen> {
   String _nameTask;
   bool _isNotification;
 
+  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {
+    print('Notification Received ${receivedNotification.id}');
+  }
+
+  onNotificationClick(String payload) {
+    print('Payload $payload');
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (coontext) {
+    //       return NotificationScreen(
+    //         payload: payload,
+    //       );
+    //     },
+    //   ),
+    // );
+  }
+
   @override
   void initState() {
     _isNotification = widget.task.isReminder;
@@ -50,6 +68,10 @@ class _NotificationTaskScreenState extends State<NotificationTaskScreen> {
       hour: widget.task.dateTimeReminder.hour,
       minute: widget.task.dateTimeReminder.minute,
     );
+
+    notificationPlugin
+        .setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin.setOnNotificationClick(onNotificationClick);
 
     super.initState();
   }
@@ -284,8 +306,11 @@ class _NotificationTaskScreenState extends State<NotificationTaskScreen> {
                           dateTimeReminder: tamNotification,
                           completed: widget.task.completed,
                           isReminder: _isNotification,
+                          idReminder: widget.task.idReminder,
                         );
                         _setTask(taskTam);
+
+                        notificationPlugin.scheduleNotificationTask(taskTam);
                         Navigator.pop(context);
                       } else {
                         SnackBar snackbar =

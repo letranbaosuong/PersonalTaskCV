@@ -95,7 +95,10 @@ class _ProjectFragmentState extends State<ProjectFragment> {
 
   Widget _notificationProject(Project project) => IconButton(
         icon: project.isReminder
-            ? Icon(Icons.notifications_active)
+            ? Icon(
+                Icons.notifications_active,
+                color: Colors.green,
+              )
             : Icon(Icons.notifications),
         onPressed: () {
           Navigator.push(

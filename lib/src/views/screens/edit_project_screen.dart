@@ -492,6 +492,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                           completed: widget.project.completed,
                           isReminder: widget.project.isReminder,
                           listTask: [],
+                          idReminder: widget.project.idReminder,
                         );
                         _setProject(project);
                         Navigator.pop(context);

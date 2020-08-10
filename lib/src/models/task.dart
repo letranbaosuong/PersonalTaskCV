@@ -9,6 +9,7 @@ class Task {
   DateTime dateTimeEnd;
   bool completed;
   bool isReminder;
+  int idReminder;
   DateTime dateTimeReminder;
 
   Task({
@@ -20,6 +21,7 @@ class Task {
     @required this.dateTimeEnd,
     @required this.completed,
     @required this.isReminder,
+    @required this.idReminder,
     @required this.dateTimeReminder,
   });
 
@@ -34,6 +36,7 @@ class Task {
             DateTime.fromMillisecondsSinceEpoch(snapshot['DateTimeEnd']),
         completed = snapshot['Completed'],
         isReminder = snapshot['IsReminder'],
+        idReminder = snapshot['IdReminder'],
         dateTimeReminder =
             DateTime.fromMillisecondsSinceEpoch(snapshot['DateTimeReminder']);
 
@@ -47,6 +50,7 @@ class Task {
       'DateTimeEnd': dateTimeEnd.millisecondsSinceEpoch,
       'Completed': completed,
       'IsReminder': isReminder,
+      'IdReminder': idReminder,
       'DateTimeReminder': dateTimeReminder.millisecondsSinceEpoch,
     };
   }
@@ -62,6 +66,7 @@ class Task {
       DateTimeEnd: $dateTimeEnd,
       Completed: $completed,
       IsReminder: $isReminder,
+      IdReminder: $idReminder,
       DateTimeReminder: $dateTimeReminder,
      }''';
   }

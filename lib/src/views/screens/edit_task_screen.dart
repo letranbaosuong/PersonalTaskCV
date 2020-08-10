@@ -481,6 +481,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                           dateTimeReminder: widget.task.dateTimeReminder,
                           completed: widget.task.completed,
                           isReminder: widget.task.isReminder,
+                          idReminder: widget.task.idReminder,
                         );
                         _setTask(task);
                         Navigator.pop(context);

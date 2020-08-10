@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_personal_taskcv_app/src/models/models.dart';
 import 'package:flutter_personal_taskcv_app/src/services/services.dart';
+import 'package:flutter_personal_taskcv_app/src/views/screens/screens.dart';
 import 'package:intl/intl.dart';
 
 class NotificationProjectScreen extends StatefulWidget {
@@ -32,6 +33,24 @@ class _NotificationProjectScreenState extends State<NotificationProjectScreen> {
   String _nameProject;
   bool _isNotification;
 
+  onNotificationInLowerVersions(ReceivedNotification receivedNotification) {
+    print('Notification Received ${receivedNotification.id}');
+  }
+
+  onNotificationClick(String payload) {
+    print('Payload $payload');
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (coontext) {
+    //       return NotificationScreen(
+    //         payload: payload,
+    //       );
+    //     },
+    //   ),
+    // );
+  }
+
   @override
   void initState() {
     _isNotification = widget.project.isReminder;
@@ -45,6 +64,10 @@ class _NotificationProjectScreenState extends State<NotificationProjectScreen> {
       hour: widget.project.dateTimeReminder.hour,
       minute: widget.project.dateTimeReminder.minute,
     );
+
+    notificationPlugin
+        .setListenerForLowerVersions(onNotificationInLowerVersions);
+    notificationPlugin.setOnNotificationClick(onNotificationClick);
 
     super.initState();
   }
@@ -261,7 +284,7 @@ class _NotificationProjectScreenState extends State<NotificationProjectScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         DateTime tamNotification = DateTime(
                           _selectedDateNotification.year,
@@ -270,7 +293,7 @@ class _NotificationProjectScreenState extends State<NotificationProjectScreen> {
                           _selectedTimeNotification.hour,
                           _selectedTimeNotification.minute,
                         );
-                        Project project = Project(
+                        Project projectTam = Project(
                           id: widget.project.id,
                           name: widget.project.name,
                           description: widget.project.description,
@@ -281,8 +304,12 @@ class _NotificationProjectScreenState extends State<NotificationProjectScreen> {
                           completed: widget.project.completed,
                           isReminder: _isNotification,
                           listTask: [],
+                          idReminder: widget.project.idReminder,
                         );
-                        _setProject(project);
+                        _setProject(projectTam);
+
+                        await notificationPlugin
+                            .scheduleNotificationProject(projectTam);
                         Navigator.pop(context);
                       } else {
                         SnackBar snackbar =

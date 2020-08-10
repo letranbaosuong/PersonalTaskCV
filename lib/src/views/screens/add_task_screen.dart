@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_personal_taskcv_app/src/views/screens/screens.dart';
 
 class AddTaskScreen extends StatefulWidget {
   AddTaskScreen({
@@ -460,6 +461,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           ),
                           completed: false,
                           isReminder: false,
+                          idReminder: random.nextInt(max),
                         );
                         _setTask(task);
                         Navigator.pop(context);

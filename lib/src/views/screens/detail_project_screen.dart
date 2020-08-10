@@ -120,6 +120,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                                 dateTimeReminder: task.dateTimeReminder,
                                 completed: false,
                                 isReminder: task.isReminder,
+                                idReminder: task.idReminder,
                               );
                               _setTask(taskTam);
                             },
@@ -154,6 +155,7 @@ class _DetailProjectScreenState extends State<DetailProjectScreen> {
                                 dateTimeReminder: task.dateTimeReminder,
                                 completed: true,
                                 isReminder: task.isReminder,
+                                idReminder: task.idReminder,
                               );
                               _setTask(taskTam);
                             },

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
+
+int max = 2147483647;
+var random = Random();
 
 class AddProjectScreen extends StatefulWidget {
   AddProjectScreen({Key key, this.auth, this.userId, this.logoutCallback})
@@ -456,6 +460,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                           completed: false,
                           isReminder: false,
                           listTask: [],
+                          idReminder: random.nextInt(max),
                         );
                         _setProject(project);
                         Navigator.pop(context);
