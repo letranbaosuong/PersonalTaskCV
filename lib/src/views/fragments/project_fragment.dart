@@ -285,27 +285,15 @@ class _ProjectFragmentState extends State<ProjectFragment> {
                             ),
                           ),
                           Align(
-                            alignment: Alignment(0, 0.7),
+                            alignment: Alignment.bottomCenter,
+                            // alignment: Alignment(0, 0.7),
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 10),
                               child: Text(
                                 '${DateFormat('dd/MM/yyyy').format(_listProject[index].dateTimeStart)}',
                                 style: TextStyle(
                                   color: Colors.deepOrange,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                              child: Text(
-                                '${DateFormat('dd/MM/yyyy').format(_listProject[index].dateTimeEnd)}',
-                                style: TextStyle(
-                                  color: Colors.deepOrange,
-                                  fontSize: 20,
+                                  fontSize: 16,
                                 ),
                               ),
                             ),
