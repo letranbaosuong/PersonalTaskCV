@@ -148,9 +148,9 @@ class _ProjectFragmentState extends State<ProjectFragment> {
 
           // { key: {}, key: {}, key: {},... }
           Map<dynamic, dynamic> valueProjects = snapshot.data.snapshot.value;
-          valueProjects.forEach((key, itemDevice) {
-            if (itemDevice != null) {
-              _listProject.add(Project.fromSnapshot(itemDevice));
+          valueProjects.forEach((key, itemProject) {
+            if (itemProject != null) {
+              _listProject.add(Project.fromSnapshot(itemProject));
             } else {}
           });
 

@@ -10,3 +10,4 @@ export 'notification_project_screen.dart';
 export 'notification_task_screen.dart';
 export 'detail_project_screen.dart';
 export 'notification_screen.dart';
+export 'show_chart_screen.dart';

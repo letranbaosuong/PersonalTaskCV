@@ -9,4 +9,9 @@ class ServiceDAOImpl implements IServiceDAO {
   Future<List<Task>> getListTask(String userId, Project project) {
     return _taskDAO.getListTask(userId, project);
   }
+
+  @override
+  Future<double> getPercentTotalTasks(String userId, String projectId) {
+    return _taskDAO.getPercentTotalTasks(userId, projectId);
+  }
 }
